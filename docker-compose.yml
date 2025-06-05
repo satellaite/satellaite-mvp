@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  demo-db:
+    image: satellaite/demo-db:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: playground-db
+      POSTGRES_USER: ${DEMO_DB_USER}
+      POSTGRES_PASSWORD: ${DEMO_DB_PASSWORD}
+    volumes:
+      - demo-db-data:/var/lib/postgresql/data
+  
+  system-db:
+    image: satellaite/system-db:latest
+    ports:
+      - "5444:5432"
+    environment:
+      POSTGRES_DB: satellaite
+      POSTGRES_USER: ${SYSTEM_DB_USER}
+      POSTGRES_PASSWORD: ${SYSTEM_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SYSTEM_DB_USER} -d satellaite"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - system-db-data:/var/lib/postgresql/data
+
+  sat-api:
+    image: satellaite/sat-api:latest
+    ports:
+      - "8070:8080"
+      - "8090:8090"
+    depends_on:
+      demo-db:
+        condition: service_started
+      system-db:
+        condition: service_healthy
+    environment:
+      - GIN_MODE=release
+      - DATABASE_URL=postgres://${SYSTEM_DB_USER}:${SYSTEM_DB_PASSWORD}@system-db:5432/satellaite
+
+  sat-ui:
+    image: satellaite/sat-ui:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sat-api
+    environment:
+      - API_BASE_URL=http://sat-api:8090/api/v1
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+volumes:
+  demo-db-data: 
+  system-db-data: 
