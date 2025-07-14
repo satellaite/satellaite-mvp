@@ -18,8 +18,8 @@ Before running the project, you must configure environment variables:
 2. Edit the `.env` file and provide values for the following variables:
 
    - `OPENAI_API_KEY`: Your OpenAI API key (required for ai features; see [AI Usage Disclaimer](#ai-usage-disclaimer))
-   - `DEMO_DB_USER`: Username for the demo-db PostgreSQL instance
-   - `DEMO_DB_PASSWORD`: Password for the demo-db PostgreSQL instance
+   - `PLAYGROUND_DB_USER`: Username for the playground-db PostgreSQL instance
+   - `PLAYGROUND_DB_PASSWORD`: Password for the playground-db PostgreSQL instance
    - `SYSTEM_DB_USER`: Username for the system-db PostgreSQL instance
    - `SYSTEM_DB_PASSWORD`: Password for the system-db PostgreSQL instance
 
@@ -32,7 +32,7 @@ docker-compose up
 ```
 
 This will start the following services:
-- **demo-db**: PostgreSQL database for demo data (port 5432)
+- **playground-db**: PostgreSQL database for playground data (port 5432)
 - **system-db**: PostgreSQL database for system data (port 5444)
 - **sat-api**: Backend API service (ports 8070, 8090)
 - **sat-ui**: Frontend UI service (port 3000)
@@ -42,7 +42,7 @@ This will start the following services:
 - **UI**: [http://localhost:3000](http://localhost:3000)
 - **API**: [http://localhost:8070](http://localhost:8070) (main API for external use)
 - **API (internal)**: [http://localhost:8090](http://localhost:8090) (API used by UI)
-- **Demo DB**: `localhost:5432` (PostgreSQL)
+- **Playground DB**: `localhost:5432` (PostgreSQL)
 - **System DB**: `localhost:5444` (PostgreSQL)
 
 
